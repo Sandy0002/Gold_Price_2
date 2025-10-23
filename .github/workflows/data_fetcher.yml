@@ -1,6 +1,9 @@
 name: Fetching data
 
 on:
+  schedule:
+    - cron: "30 03 * * *"   # ✅ Runs every day at 03:30 UTC
+  workflow_dispatch:
   push:
     branches: [ main ]
   pull_request:
