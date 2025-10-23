@@ -1,0 +1,42 @@
+name: Fetching data
+
+on:
+  schedule:
+    - cron: "35 13 * * *"   # ✅ Runs every day at 19:05 IST after data_fetcher
+  
+  push:
+      branches: [ main ]
+  pull_request:
+      branches: [ main ]
+  
+permissions:
+  contents: write  
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.13'
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+
+      - name: Creating and updating model file
+        run: |
+          python src/train_model.py
+      
+      - name: Commit updated data file
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "github-actions@github.com"
+          git add data/gold_data.xlsx
+          git commit -m "Update gold data automatically" || echo "No changes to commit"
+          git push
