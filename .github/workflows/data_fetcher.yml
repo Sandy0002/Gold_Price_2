@@ -4,11 +4,6 @@ on:
   schedule:
     - cron: "30 13 * * *"   # ✅ Runs every day at 19:00 IST
   
-  push:
-      branches: [ main ]
-  pull_request:
-      branches: [ main ]
-  
 permissions:
   contents: write  
 
