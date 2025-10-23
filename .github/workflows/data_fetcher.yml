@@ -27,3 +27,11 @@ jobs:
         run: |
           python src/data_preprocess.py
       
+      - name: Commit updated data file
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "github-actions@github.com"
+          git add data/gold_data.xlsx
+          git commit -m "Update gold data automatically" || echo "No changes to commit"
+          git push
+      
