@@ -31,7 +31,7 @@ jobs:
 
       - name: Creating and updating model file
         run: |
-          python  src/train_model.py
+          python  src.train_model
       
       - name: Commit updated data file
         run: |

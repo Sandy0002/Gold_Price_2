@@ -23,13 +23,11 @@ def training():
 
     model.compile(optimizer='adam', loss='mean_squared_error')
     # model.summary()
-
-
-    # ===== 5. Train =====
-    # here batch_size gives how many samples (sequences) the model processes before updating weights during training.
+    os.makedirs("models", exist_ok=True)  # create folder if it doesn't exist
+    # Fitting data
     history = model.fit(xTrain, yTrain, epochs=20, batch_size=32, validation_data=(xTest, yTest), verbose=1)
 
-    os.makedirs("models", exist_ok=True)  # create folder if it doesn't exist
+    
     model.save("models\\gold_lstm_model.h5")
 
     return xTest,yTest,scaler
