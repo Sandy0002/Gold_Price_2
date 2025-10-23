@@ -1,35 +1,36 @@
 import pandas as pd
 import yfinance as yf
-from  datetime import date, timedelta
+from datetime import date, timedelta
 import os
 
+# --- Configuration ---
 ticker = "GC=F"
+file_path = os.path.join("data", "gold_data.xlsx")
+os.makedirs("data", exist_ok=True)  # ensure data folder exists
+
+# --- Fetch full history (if needed) ---
 gold = yf.Ticker(ticker)
 df = gold.history(start="2020-01-01", interval="1d")
 
-# Getting today's rates
+# --- Fetch today's rate ---
 today = date.today()
-tomorrow  = today + timedelta(days=1)
-latest_price = gold.history(start=today,end=tomorrow)
+tomorrow = today + timedelta(days=1)
+latest_price = gold.history(start=today, end=tomorrow)
 
+# --- Remove timezone info (important for Excel) ---
+df = df.reset_index()
+df["Date"] = pd.to_datetime(df["Date"]).dt.tz_localize(None)
 
-# Note if we don't remove timezone then excel won't be able to save it
-df["Date"]=df.index
-df['Date'] = df['Date'].dt.tz_localize(None)
+latest_price = latest_price.reset_index()
+latest_price["Date"] = pd.to_datetime(latest_price["Date"]).dt.tz_localize(None)
 
-
-# Exporting data to excel file
-# File path
-file_path = "data\\gold_data.xlsx"
-
-# Export to Excel
+# --- Save or update Excel file ---
 if not os.path.exists(file_path):
-    df.to_excel(file_path, index=False)  # creates file
+    df.to_excel(file_path, index=False)
+    print("✅ File created successfully.")
 else:
-    # Append new data without overwriting the latest data record
-    record = latest_price
-    for col in record.select_dtypes(include=['datetime64[ns, UTC]']):
-      record[col] = record[col].dt.tz_localize(None)
     existing_df = pd.read_excel(file_path)
-    updated_df = pd.concat([existing_df, record], ignore_index=True)
+    updated_df = pd.concat([existing_df, latest_price], ignore_index=True)
+    updated_df.drop_duplicates(subset=["Date"], keep="last", inplace=True)
     updated_df.to_excel(file_path, index=False)
+    print("✅ File updated successfully.")
