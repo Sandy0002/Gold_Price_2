@@ -1,5 +1,6 @@
 # In this program we will be training data by taking inputs from sequence_creator.py 
 
+import os
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import LSTM, Dense, Dropout
 import matplotlib.pyplot as plt
@@ -28,6 +29,7 @@ def training():
     # here batch_size gives how many samples (sequences) the model processes before updating weights during training.
     history = model.fit(xTrain, yTrain, epochs=20, batch_size=32, validation_data=(xTest, yTest), verbose=1)
 
+    os.makedirs("models", exist_ok=True)  # create folder if it doesn't exist
     model.save("models\\gold_lstm_model.h5")
 
     return xTest,yTest,scaler

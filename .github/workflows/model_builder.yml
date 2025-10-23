@@ -1,4 +1,4 @@
-name: Fetching data
+name: Model Building
 
 on:
   schedule:
@@ -39,5 +39,5 @@ jobs:
           git config --global user.name "github-actions"
           git config --global user.email "github-actions@github.com"
           git add models/gold_lstm_model.h5
-          git commit -m "Update gold data automatically" || echo "No changes to commit"
+          git commit -m "Save lstm model automatically" || echo "No changes to commit"
           git push
