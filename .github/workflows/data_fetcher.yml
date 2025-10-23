@@ -2,7 +2,7 @@ name: Fetching data
 
 on:
   schedule:
-    - cron: "12 15 * * *"   # ✅ Runs every day at 19:00 IST
+    - cron: "38 15 * * *"   # ✅ Runs every day at 19:00 IST
   
 permissions:
   contents: write  
