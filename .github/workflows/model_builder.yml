@@ -3,11 +3,11 @@ name: Model Building
 on:
   schedule:
     - cron: "35 14 * * *"   # ✅ Runs every day at 19:05 IST after data_fetcher
-
   push:
     branches: [ main ]
   pull_request:
     branches: [ main ]
+
 
 permissions:
   contents: write  
@@ -32,6 +32,7 @@ jobs:
       - name: Creating and updating model file
         run: |
           python -m src.forecaster
+          python -m src.metadata_dumper
       
       - name: Commit updated data file
         run: |

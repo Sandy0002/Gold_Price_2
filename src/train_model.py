@@ -9,6 +9,7 @@ from pathlib import Path
 from tensorflow.keras.models import load_model
 from sklearn.metrics import mean_squared_error, r2_score
 
+
 def modelUpdater(newModel,xTest,yTest):
     project_root = Path(__file__).resolve().parents[1]
     # Create models directory under project root
@@ -36,6 +37,7 @@ def modelUpdater(newModel,xTest,yTest):
         if new_score_r2 > old_score_r2:  # Lower MSE = better model
             print("✅ New model is better. Saving it.")
             newModel.save(model_path)
+
         else:
             print("⚠️ New model is worse. Keeping old one.")
     else:
