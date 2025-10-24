@@ -43,7 +43,8 @@ jobs:
 
           # Stage and commit new model
           git add models/gold_lstm_model.h5
-          git commit -m "Save model automatically" || echo "No changes to commit"
+          git add models/model_metadata.json
+          git commit -m "Save model and metadata automatically" || echo "No changes to commit"
 
           # Push with rebase to avoid conflicts
           git push origin main
