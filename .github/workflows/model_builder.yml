@@ -35,8 +35,14 @@ jobs:
       
       - name: Commit updated data file
         run: |
-          git config --global user.name "github-actions"
-          git config --global user.email "github-actions@github.com"
+          # Make sure we’re on the latest main
+          git fetch origin main
+          git checkout main
+          git pull origin main
+
+          # Stage and commit new model
           git add models/gold_lstm_model.h5
           git commit -m "Save model automatically" || echo "No changes to commit"
-          git push
+
+          # Push with rebase to avoid conflicts
+          git push origin main
