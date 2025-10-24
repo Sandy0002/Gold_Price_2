@@ -2,7 +2,12 @@ name: Fetching data
 
 on:
   schedule:
-    - cron: "30 13 * * *"   # ✅ Runs every day at 19:00 IST
+    - cron: "30 14 * * *"   # ✅ Runs every day at 20:00 IST
+  
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
   
 permissions:
   contents: write  
