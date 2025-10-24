@@ -3,7 +3,7 @@ from pathlib import Path
 import datetime
 
 # Paths
-project_root = Path(__file__).resolve().parents[0]
+project_root = Path(__file__).resolve().parents[1]
 models_dir = project_root / "models"
 models_dir.mkdir(exist_ok=True)
 model_file = models_dir / "gold_lstm_model.h5"
