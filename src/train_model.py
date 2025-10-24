@@ -6,7 +6,40 @@ from tensorflow.keras.layers import LSTM, Dense, Dropout
 import matplotlib.pyplot as plt
 from src.sequence_creator import prepare_data
 from pathlib import Path
+from tensorflow.keras.models import load_model
+from sklearn.metrics import mean_squared_error
 
+def modelSaver(newModel,xTest,yTest):
+    project_root = Path(__file__).resolve().parents[1]
+    # Create models directory under project root
+    models_dir = project_root / "models"
+    models_dir.mkdir(exist_ok=True)
+    model_path = models_dir / "gold_lstm_model.h5"
+
+    # Evaluate new model
+    y_pred_new = newModel.predict(xTest)
+    new_score = mean_squared_error(yTest, y_pred_new)
+
+    # Check if existing model exists
+    if model_path.exists():
+        # Load and evaluate old model
+        old_model = load_model(model_path)
+        y_pred_old = old_model.predict(xTest)
+        old_score = mean_squared_error(yTest, y_pred_old)
+
+        print(f"Old model MSE: {old_score:.5f}")
+        print(f"New model MSE: {new_score:.5f}")
+
+        # Compare and decide
+        if new_score < old_score:  # Lower MSE = better model
+            print("✅ New model is better. Saving it.")
+            newModel.save(model_path)
+        else:
+            print("⚠️ New model is worse. Keeping old one.")
+    else:
+        # No existing model → save the first one
+        print("ℹ️ No existing model found. Saving new model.")
+        newModel.save(model_path)
 
 def training():
     # Getting data from sequence_creator
@@ -28,15 +61,8 @@ def training():
     # Fitting data
     history = model.fit(xTrain, yTrain, epochs=20, batch_size=32, validation_data=(xTest, yTest), verbose=1)
     
+    newModel = model
     # Get project root (assuming current file is inside src/)
-    project_root = Path(__file__).resolve().parents[1]
-
-    # Create models directory under project root
-    models_dir = project_root / "models"
-    models_dir.mkdir(exist_ok=True)
-
-    # Save model to that folder
-    model_path = models_dir / "gold_lstm_model.h5"
-    model.save(model_path)
+    modelSaver(newModel,xTest,yTest)
 
     return xTest,yTest,scaler
