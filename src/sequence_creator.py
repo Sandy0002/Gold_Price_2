@@ -4,6 +4,7 @@ import numpy as np
 import pandas as pd
 import sklearn as sk
 from sklearn.preprocessing import MinMaxScaler
+from pathlib import Path
 
 # Create sequences (lookback = 60 days)
 def create_sequences(data, lookback):
@@ -15,30 +16,31 @@ def create_sequences(data, lookback):
 
 
 def prepare_data():
-      df = pd.read_excel("data\\gold_data.xlsx")
-      data = df[["Close"]]
+    data_path = Path(__file__).resolve().parents[1] / "data" / "gold_data.xlsx"
+    df = pd.read_excel(data_path)
+    data = df[["Close"]]
 
-      # Scaling data
-      scaler = MinMaxScaler(feature_range=(0, 1))
-      scaled_data = scaler.fit_transform(data)
-      lookback = 60
+    # Scaling data
+    scaler = MinMaxScaler(feature_range=(0, 1))
+    scaled_data = scaler.fit_transform(data)
+    lookback = 60
 
-      X, y = create_sequences(scaled_data, lookback)
+    X, y = create_sequences(scaled_data, lookback)
 
-      # That line reshapes X so it matches the 3D input format LSTMs expect: [samples, timesteps, features]
-      '''
-      X.shape[0] → number of samples  
-      X.shape[1] → number of timesteps (lookback window, e.g. 60)  
-      1 → number of features per timestep (e.g. just "Close" price)
+    # That line reshapes X so it matches the 3D input format LSTMs expect: [samples, timesteps, features]
+    '''
+    X.shape[0] → number of samples  
+    X.shape[1] → number of timesteps (lookback window, e.g. 60)  
+    1 → number of features per timestep (e.g. just "Close" price)
 
-      So if your original X was shaped like (2000, 60) — meaning 2000 sequences, each with 60 values — the reshape makes it (2000, 60, 1) so the LSTM knows there’s 1 feature per time step.
+    So if your original X was shaped like (2000, 60) — meaning 2000 sequences, each with 60 values — the reshape makes it (2000, 60, 1) so the LSTM knows there’s 1 feature per time step.
 '''
-      X = np.reshape(X, (X.shape[0], X.shape[1], 1))  # [samples, timesteps, features]
-      # Train / test split
+    X = np.reshape(X, (X.shape[0], X.shape[1], 1))  # [samples, timesteps, features]
+    # Train / test split
 
-      # Train / test split
-      split = int(len(X) * 0.7)
-      X_train, X_test = X[:split], X[split:]
-      y_train, y_test = y[:split], y[split:]
+    # Train / test split
+    split = int(len(X) * 0.7)
+    X_train, X_test = X[:split], X[split:]
+    y_train, y_test = y[:split], y[split:]
 
-      return X_train,X_test,y_train,y_test,scaler
+    return X_train,X_test,y_train,y_test,scaler
