@@ -7,3 +7,5 @@ tensorflow
 pytest
 openpyxl
 boto3
+fastapi
+uvicorn
