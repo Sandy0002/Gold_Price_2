@@ -5,6 +5,7 @@ from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import LSTM, Dense, Dropout
 import matplotlib.pyplot as plt
 from src.sequence_creator import prepare_data
+from pathlib import Path
 
 
 def training():
@@ -27,7 +28,15 @@ def training():
     # Fitting data
     history = model.fit(xTrain, yTrain, epochs=20, batch_size=32, validation_data=(xTest, yTest), verbose=1)
     
-    os.makedirs("models", exist_ok=True)  # create folder if it doesn't exist
-    model.save("models\\gold_lstm_model.h5")
+    # Get project root (assuming current file is inside src/)
+    project_root = Path(__file__).resolve().parents[1]
+
+    # Create models directory under project root
+    models_dir = project_root / "models"
+    models_dir.mkdir(exist_ok=True)
+
+    # Save model to that folder
+    model_path = models_dir / "gold_lstm_model.h5"
+    model.save(model_path)
 
     return xTest,yTest,scaler
