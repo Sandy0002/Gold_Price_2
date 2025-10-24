@@ -34,17 +34,20 @@ jobs:
           python -m src.forecaster
           python -m src.metadata_dumper
       
-      - name: Commit updated data file
+      - name: Commit updated model and metadata
         run: |
-          # Make sure we’re on the latest main
-          git fetch origin main
+          git config --global user.name "github-actions"
+          git config --global user.email "github-actions@github.com"
+
+          # Ensure full history
+          git fetch --prune --unshallow || echo "Already full clone"
+
           git checkout main
           git pull origin main
 
-          # Stage and commit new model
+          # Stage files if they exist
           git add models/gold_lstm_model.h5
-          git add models/model_metadata.json
-          git commit -m "Save model and metadata automatically" || echo "No changes to commit"
+          [ -f models/model_metadata.json ] && git add models/model_metadata.json
 
-          # Push with rebase to avoid conflicts
+          git commit -m "Save model and metadata automatically" || echo "No changes to commit"
           git push origin main
