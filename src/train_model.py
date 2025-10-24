@@ -33,7 +33,7 @@ def modelUpdater(newModel,xTest,yTest):
         print(f"New model MSE: {new_score_mse:.5f}")
 
         # Compare and decide
-        if new_score_r2 < old_score_r2:  # Lower MSE = better model
+        if new_score_r2 > old_score_r2:  # Lower MSE = better model
             print("✅ New model is better. Saving it.")
             newModel.save(model_path)
         else:

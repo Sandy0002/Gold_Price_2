@@ -1,5 +1,4 @@
 # This program will generate predictions for future period
-
 import numpy as np
 from tensorflow.keras.models import load_model
 from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
