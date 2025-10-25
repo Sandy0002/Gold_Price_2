@@ -6,5 +6,5 @@
 2. Model Builder: To train and save model, generate meta data about model
 
 
-### Play with model from here
+### Play with model from here(give past 60 days gold value as a list)
 [Click Here](https://gold-price-api-5bcx.onrender.com/docs#/default/predict_predict_post)
