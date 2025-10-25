@@ -54,6 +54,25 @@ except Exception as e:
 def root():
     return {"message": "Welcome to the Gold Price Forecasting API!"}
 
+@app.get("/about_model")
+def about_model():
+    """Return information about the currently deployed model."""
+    models_dir = Path(__file__).resolve().parents[1] / "models"
+    metadata_file = models_dir / "model_metadata.json"
+
+    if not metadata_file.exists():
+        raise HTTPException(status_code=404, detail="Model metadata not found")
+
+    try:
+        with open(metadata_file, "r") as f:
+            metadata = json.load(f)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error reading metadata: {str(e)}")
+
+    return {
+        "status": "success",
+        "model_info": metadata
+    }
 
 # 5. Prediction endpoint
 # ===============================
